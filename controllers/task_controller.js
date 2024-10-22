@@ -6,7 +6,7 @@ async function handleCreateTask(req, res){
         const { title, description, status, priority, dueDate } = req.body;
         const createdBy = req.user.id;        
 
-        await Task.create({
+        const task = await Task.create({
             title,
             description,
             status,
@@ -15,7 +15,7 @@ async function handleCreateTask(req, res){
             createdBy
         });
 
-        return res.json({ message: 'Task created successfully', task_id: '1234' });
+        return res.json({ message: 'Task created successfully', task_id: task.id });
     }catch(err){
         return res.json({message: err.message})
     }

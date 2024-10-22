@@ -1,4 +1,6 @@
 const User = require('../models/user_model');
+const bcrypt = require('bcrypt');
+const { createToken } = require('../services/authentication');
 
 async function handleUserSignUp(req, res) {
     try {
@@ -20,8 +22,16 @@ async function handleUserSingIn(req, res){
     try{
         const { email, password } = req.body;
         console.log(`${email}\n${password}`);
+
+        const user = await User.findOne({email});
+
+        if(!user) throw new Error('Invalid Credentials');
         
-        const token = await User.matchPassword(email, password);
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if(!isMatch) throw new Error('Invalid Credentials');
+
+        const token = createToken(user);
 
         return res.json({
             message: 'Signed in successfully',
