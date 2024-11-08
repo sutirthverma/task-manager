@@ -2,7 +2,7 @@ const { validateToken } = require("../services/authentication");
 
 function checkForAuth(){
     return (req, res, next) => {
-        const token = req.header('authorization').split(' ')[1];
+        const token = req.header('Authorization').replace('Bearer ', '');
 
         if(!token) return res.json({message: 'User not validated'});
 
